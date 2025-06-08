@@ -14,10 +14,10 @@ public class Bot extends TelegramLongPollingBot {
     private CommandService commandService;
     @Resolve
     private Logger logger;
+
     @Override
     public String getBotUsername() {
-        // Верните имя вашего бота
-        return "YOUR_BOT_USERNAME";
+        return "Туристический консультант";
     }
 
     @Override
@@ -25,30 +25,29 @@ public class Bot extends TelegramLongPollingBot {
         return "YOUR_BOT_TOKEN";
     }
 
-
     @Override
     public void onUpdateReceived(Update update) {
-        logger.debug("Получено новое обновление: " + update.toString());
+        logger.debug("Получено обновление: " + update.toString());
 
-        // Проверяем, есть ли в обновлении сообщение и текст сообщения
         if (update.hasMessage() && update.getMessage().hasText()) {
-            String command = update.getMessage().getText();
+            String messageText = update.getMessage().getText();
             String chatId = update.getMessage().getChatId().toString();
 
-            logger.info("Обработка команды: " + command);
-
             try {
-                if (command.equalsIgnoreCase("/getHeroes")) {
-                    // Вызов метода getHeroes из CommandService
-                    execute(commandService.getHeroes(chatId));
-
-                } else if (command.equalsIgnoreCase("/help")) {
-                    // Вызов метода getHelp из CommandService
-                     execute(commandService.getHelp(chatId));
+                if (messageText.equalsIgnoreCase("/start")) {
+                    execute(commandService.startCommand(chatId));
+                } else if (messageText.equalsIgnoreCase("/help")) {
+                    execute(commandService.getHelp(chatId));
+                } else if (messageText.equalsIgnoreCase("да")) {
+                    // Сначала отправляем текстовое сообщение
+                    execute(commandService.handleUserResponse(chatId, messageText));
+                    // Затем отправляем клавиатуру с вариантами
+                    execute(commandService.showTravelOptions(chatId, this));
+                } else {
+                    execute(commandService.handleUserResponse(chatId, messageText));
                 }
-                // Отправляем сообщение
             } catch (TelegramApiException e) {
-                logger.error("Ошибка при отправке сообщения в Telegram: " + e.getMessage());
+                logger.error("Ошибка при отправке сообщения: " + e.getMessage());
             }
         }
     }

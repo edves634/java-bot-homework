@@ -17,7 +17,7 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        return "Туристический консультант";
+        return "BOT_NAME";
     }
 
     @Override
@@ -27,28 +27,30 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        logger.debug("Получено обновление: " + update.toString());
+        if (!update.hasMessage() || !update.getMessage().hasText()) {
+            return;
+        }
 
-        if (update.hasMessage() && update.getMessage().hasText()) {
-            String messageText = update.getMessage().getText();
-            String chatId = update.getMessage().getChatId().toString();
+        String messageText = update.getMessage().getText();
+        String chatId = update.getMessage().getChatId().toString();
 
-            try {
-                if (messageText.equalsIgnoreCase("/start")) {
+        try {
+            switch (messageText.toLowerCase()) {
+                case "/start":
                     execute(commandService.startCommand(chatId));
-                } else if (messageText.equalsIgnoreCase("/help")) {
+                    break;
+                case "/help":
                     execute(commandService.getHelp(chatId));
-                } else if (messageText.equalsIgnoreCase("да")) {
-                    // Сначала отправляем текстовое сообщение
+                    break;
+                case "да":
                     execute(commandService.handleUserResponse(chatId, messageText));
-                    // Затем отправляем клавиатуру с вариантами
                     execute(commandService.showTravelOptions(chatId, this));
-                } else {
+                    break;
+                default:
                     execute(commandService.handleUserResponse(chatId, messageText));
-                }
-            } catch (TelegramApiException e) {
-                logger.error("Ошибка при отправке сообщения: " + e.getMessage());
             }
+        } catch (TelegramApiException e) {
+            logger.error("Ошибка при отправке сообщения: " + e.getMessage());
         }
     }
 }

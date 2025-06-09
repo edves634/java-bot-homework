@@ -36,7 +36,7 @@ public class CommandServiceImpl implements CommandService {
         message.setChatId(chatId);
 
         if (text.equalsIgnoreCase("да")) {
-            message.setText("Отлично! Сейчас покажем варианты.");
+            message.setText("Отлично! Вот варианты для поездки, а также вы можете подобрать жилье и страховку. Как бонус статья, как можно зарабатывать в поездках и путешествиях в конце списка!");
             return message;
         } else if (text.equalsIgnoreCase("нет")) {
             message.setText("Жаль! Если передумаете - просто напишите /start");
@@ -58,6 +58,11 @@ public class CommandServiceImpl implements CommandService {
         rows.add(createButtonRow("2. Туры с перелетом", "https://travelata.tp.st/N5mhcEzA?erid=2Vtzqw422R8"));
         rows.add(createButtonRow("3. Санатории", "https://sanatory.tp.st/YBl7VDw8?erid=2VtzqvmBLWG"));
         rows.add(createButtonRow("4. Круизы", "https://lavoyage.tp.st/I1mwtXxV?erid=2VtzqufYFY8"));
+        rows.add(createButtonRow("5. Отели", "https://hotellook.tp.st/5nalTqC1"));
+        rows.add(createButtonRow("6. Квартиры посуточно", "https://sutochno.tp.st/Atl2dRdj"));
+        rows.add(createButtonRow("7. Связь в роуминге", "https://yesim.tp.st/dOy2DoeY?erid=2VtzquZdJrY"));
+        rows.add(createButtonRow("8. Страховка", "https://cherehapa.tp.st/BLDnBaE5?erid=2VtzqwzQ8kJ"));
+        rows.add(createButtonRow("9. Как зарабатывать на путешествиях", "https://keyslady.ru/путешествуй-с-удовольствием-и-зараба/?swcfpc=1"));
 
         keyboardMarkup.setKeyboard(rows);
 
